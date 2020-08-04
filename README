@@ -1,0 +1,157 @@
+osxbk makes keyboard layouts for OSX.
+
+Usage:
+  osxkb FILE
+  osxkb -h|-?|--help     To print a help message and exit
+  osxkb -v|--version     To print version information and exit
+
+The FILE is a configuration file that tells osxkb what you want to do. The
+program generates an OSX bundle containing one or more generated keyboard
+layouts. To install it, copy it into your "~/Library/Keyboard Layouts"
+directory. You may also have to log out and then before a new keyboard is
+available in the System Keyboard Preferences.
+
+
+THE CONFIGURATION FILE
+
+Here's an annotated example showing all possibilities:
+
+--------------------------------------------------------------------------------
+# Lines beginning with # are treated as comments and ignored
+
+# First you configure the bundle as  a whole.
+
+# The bundle's name will be used in the name of the generated .bundle file,
+# it can contain anything that's allowed in an OSX filename. This field
+# mandatory.
+name = NAME
+
+# A URL used to identify the the keyboard(s) to OSX. You're supposed to use
+# reverse domain name notation. This field is optional, "org.chinjir" will
+# be used as a fallback if you don't supply it.
+baseurl = org.chinjir|...
+
+# You can supply a version string if you want, but it's not necessary.
+version = VERSION
+
+
+# Then you configure one or more keyboards, each in its own "keyboard"
+# section. The keyboards are completely independent. One possible use is to
+# supply both Qwerty and Dvorak variants of a keyboard.
+[keyboard]
+
+# You don't have to give the keyboard a name distinct from the bundle's, but
+# you can, and if you're configuring multiple keyboards then you'll want
+# them to have different names.
+name = NAME
+
+# The language will determine where OSX offers the keyboard in the System
+# Keyboard Preferences dialog; "en" is the default, and it puts the keyboard
+# in the "English" group.
+language = en|...
+
+# The base encoding determines the underlying mapping of hardware keys to
+# characters. Two encodings are supported internally, ansi.qwerty and
+# ansi.dvorak; see below for more on what they do and how to set up your
+# own. 
+base-encoding = ansi.qwerty|ansi.dvorak|...
+
+# OSX has certain default keybindings that allow you to use the Option key
+# to access certain characters (e.g., [Option-e e] gives you "é"). If you
+# choose "true" here, those bindings will be included in the generated
+# keyboard layout. (The default is "false".)
+osxopt = true|false
+
+# This points to a file containing mappings from key sequences to output
+# strings. You need to supply at least one such file, you can also repeat
+# this option as often as you want.
+datafile = FILE
+
+# If you have a CapsLock button, you have a couple of options besides
+# leaving it to lock caps. OSX allows you to use CapsLock to switch between
+# input methods, to use it that way put "switch-im" here. Alternatively, if
+# you set it to "disable" then when CapsLock is down then the keyboard
+# layout will fall back on the base encoding (e.g., Qwerty or Dvorak), and
+# all special key sequences will be disabled. Omit this option if you just
+# want CapsLock to lock caps.
+capslock-policy = switch-im|disable
+
+# Supply an .icns file to set the icons that will be used with your keyboard
+# layout (in the Keyboard Preferences dialog and the notification area).
+# This is optional.
+icons = FILE
+--------------------------------------------------------------------------------
+
+
+THE MAIN DATA FILE(s)
+
+You map key sequences to output strings in a simple format, like this:
+
+  é O-e e
+
+This configures the sequence [Option-e e] so that it will result in "é". You
+just include a single line in that format for each key sequence you want
+treated specially. There are only a few tricks.
+
+First, the key sequences are interpreted relative to the base encoding you
+choose---so the "e" in that example represents the key (plus shift state)
+that will normally result in "e" (and this is a different key in Qwerty and
+Dvorak). This is probably what you want.
+
+Second, use "O-" as a prefix to represent the Option key (so "O-e" means
+that you press Option and [e] at the same time). You can also use "C-" for
+the Control (*not* Command!) key.
+
+Third, whitespace is ignored, so if you want a literal space or a tab either
+in your output or in the key sequence you're defining, you have to use [SPC]
+or [TAB] (including the brackets) instead of the literal characters. The
+space between the output string and the key sequence is obligatory, but you
+don't have to include spaces to break up the key sequences. So this would
+work, and be equivalent to the previous example:
+
+  é O-ee
+
+Fourth, some other characters also get aliased, including all nonprinting
+characters, as well as - ([DASH]), [ ([LBR]), and ] ([RBR]). The usual
+symbolic names for the nonprinting characters all work (see data/ascii.in
+for details). Note that a sequence "O-" will always be interpreted as
+requiring the Option key; if for some reason you want "O" followed by a
+hyphen, then either put a space between them or use "O[DASH]".
+
+For a fuller example, you can look at data/osxopt. It gives OSX's default
+bindings in the format required for data files in general.
+
+
+THE BASE ENCODING
+
+Here's the beginning of the data/ansi.dvorak file that defines the Dvorak
+base encoding:
+
+  0 a A A
+  1 s S S
+  2 d D D
+  3 f F F
+
+And here are the corresponding lines in data/ansi.qwerty:
+
+  0 a A A
+  1 s S S
+  2 d D D
+  3 f F F
+
+Each line has four space-delimited fields: the key code, the normal output
+when neither Shift nor CapsLock is pressed, the normal output when Shift is
+pressed, and the normal output when CapsLock but not Shift is pressed. (The
+last two columns will normally differ with nonalphabetic output: [Shift-2]
+is "@" but [2] alone when CapsLock is active is just "2".
+
+To define your own base encoding, you just need a file like those. Key codes
+can go up to 127, though you don't have to configure all of them; look at
+ansi.qwerty or ansi.dvorak to see how it's done. (Pay attention especially
+to the treatment of nonprinting characters in the higher code range.)
+
+The encodings that the package supplies use the prefix "ansi" because
+they're written for ANSI keyboards. JIS keyboards have a few extra keys, but
+I don't have easy access to a JIS keyboard, so I haven't tried to do
+anything with those keys. However, it should be easy to set up JIS encodings
+if that's what you want.

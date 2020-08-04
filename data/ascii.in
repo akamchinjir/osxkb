@@ -1,0 +1,80 @@
+[nonprinting]
+1 SOH &#x0001;
+2 STX &#x0002;
+3 ETX &#x0003;
+4 EOT &#x0004;
+5 ENQ &#x0005;
+6 ACK &#x0006;
+7 BEL &#x0007;
+8 BS &#x0008;
+9 TAB &#x0009;
+10 LF &#x000a;
+11 VT &#x000b;
+12 FF &#x000c;
+13 CR &#x000d;
+14 SO &#x000e;
+15 SI &#x000f;
+16 DLE &#x0010;
+17 DC1 &#x0011;
+18 DC2 &#x0012;
+19 DC3 &#x0013;
+20 DC4 &#x0014;
+21 NAK &#x0015;
+22 SYN &#x0016;
+23 ETB &#x0017;
+24 CAN &#x0018;
+25 EM &#x0019;
+26 SUB &#x001a;
+27 ESC &#x001b;
+28 FS &#x001c;
+29 GS &#x001d;
+30 RS &#x001e;
+31 US &#x001f;
+127 DEL &#x007f;
+
+[xmlspecial]
+34 DQUOT &#x0022;
+38 AMP &#x0026;
+39 SQUOT &#x0027;
+60 LT &#x003c;
+62 GT &#x003e;
+
+[otherspecial]
+9 HT
+32 SPC
+45 DASH
+46 PERIOD
+91 LBR
+93 RBR
+
+[control]
+a SOH
+b STX
+c ETX
+d EOT
+e ENQ
+f ACK
+g BEL
+h BS
+i TAB
+j LF
+k VT
+l FF
+m CR
+n SO
+o SI
+p DLE
+q DC1
+r DC2
+s DC3
+t DC4
+u NAK
+v SYN
+w ETB
+x CAN
+y EM
+z SUB
+- US
+\\ FS
+] GS
+[ ESC

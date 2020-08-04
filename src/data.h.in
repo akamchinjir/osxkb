@@ -1,0 +1,34 @@
+/** DO NOT EDIT! GENERATED AUTOMATICALLY! */
+
+#ifndef OSX_KB_DATA_H
+#define OSX_KB_DATA_H
+
+#include "common.h"
+
+typedef enum
+  {
+    KB_DATA_OSXOPT,
+    KB_DATA_ANSI_QWERTY,
+    KB_DATA_ANSI_DVORAK
+  } KbData;
+
+typedef struct _AsciiLookup AsciiLookup;
+
+struct _AsciiLookup
+{
+  const char *name;
+  char ascii;
+};
+
+static const char *name_lookup[128] G_GNUC_UNUSED;
+static const char *output_lookup[128] G_GNUC_UNUSED;
+static const char *control_codes[128] G_GNUC_UNUSED;
+
+char *data_load (const char *data_name, GError **error);
+char *data_load_internal (KbData data_id, GError **error);
+
+char lookup_ascii (const char *name);
+const char *lookup_name (int ascii);
+const char *lookup_output (int ascii);
+const char *lookup_ctrl_code (const char *literal);
+
